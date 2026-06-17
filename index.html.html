@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ajanta Precast — Labour Camp Management</title>
+<style>
+/* ==========================================
+   AJANTA PRECAST — LABOUR CAMP MANAGEMENT
+   ⚡ JSONBin Cloud Sync — Sabhi Devices Auto Sync
+   ========================================== */
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:linear-gradient(135deg,#eef2f7 0%,#dce6f5 100%);min-height:100vh;color:#1a1a2e}
+
+/* ===== HEADER ===== */
+.hdr{background:linear-gradient(135deg,#0d2b45 0%,#1a3a5c 50%,#0f3250 100%);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,.4);flex-wrap:wrap;gap:10px;position:relative;overflow:hidden}
+.hdr::before{content:'';position:absolute;top:-60px;right:-40px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.18) 0%,transparent 70%);pointer-events:none}
+.hdr-left{display:flex;align-items:center;gap:14px;z-index:1}
+.hdr-logo-area{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,#c9a84c,#b8952e);display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:800;color:#0d2b45;box-shadow:0 3px 12px rgba(0,0,0,.3);border:2px solid rgba(201,168,76,.6)}
+.hdr-name{font-size:19px;font-weight:800;color:#c9a84c;letter-spacing:1.5px;text-transform:uppercase;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+.hdr-sub{font-size:11px;color:rgba(180,205,230,.75);margin-top:4px;letter-spacing:.5px}
+.hdr-right{display:flex;align-items:center;gap:10px;flex-wrap:wrap;z-index:1}
+.hdr-badge{background:linear-gradient(135deg,rgba(201,168,76,.25),rgba(201,168,76,.1));border:1px solid rgba(201,168,76,.4);color:#f0d78c;font-size:13px;padding:6px 16px;border-radius:20px;font-weight:600}
+.sdot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:6px;box-shadow:0 0 8px currentColor}
+.sdot.grn{background:#27ae60;box-shadow:0 0 10px #27ae60;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.sdot.busy{background:#f39c12;box-shadow:0 0 10px #f39c12;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.stxt{font-size:12px;color:rgba(255,255,255,.8);display:flex;align-items:center}
+
+/* ===== NAV ===== */
+.nav{background:linear-gradient(180deg,#162f48,#11273d);display:flex;flex-wrap:wrap;padding:0 16px;border-bottom:3px solid #c9a84c;box-shadow:0 2px 10px rgba(0,0,0,.25)}
+.nb{background:none;border:none;color:rgba(255,255,255,.5);padding:13px 18px;font-size:13px;cursor:pointer;font-family:inherit;border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .25s;font-weight:500}
+.nb:hover{color:#f0d78c;background:rgba(201,168,76,.08)}
+.nb.on{color:#c9a84c;border-bottom-color:#c9a84c;font-weight:700;background:rgba(201,168,76,.08)}
+
+/* ===== LAYOUT ===== */
+.wrap{max-width:1320px;margin:20px auto;padding:0 18px}
+.pnl{display:none;animation:fadeIn .35s ease}
+.pnl.on{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== CARDS ===== */
+.card{background:linear-gradient(180deg,#fff 0%,#f9fafc 100%);border-radius:12px;box-shadow:0 3px 16px rgba(13,43,69,.1);padding:22px;margin-bottom:18px;border:1px solid rgba(13,43,69,.06)}
+.ctitle{font-size:14px;font-weight:700;color:#1a3a5c;margin-bottom:16px;border-left:4px solid #c9a84c;padding-left:12px;text-transform:uppercase;letter-spacing:.5px}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:40px;padding:0 18px;border-radius:8px;cursor:pointer;font-size:13px;font-family:inherit;font-weight:600;border:none;white-space:nowrap;text-decoration:none;transition:all .2s;letter-spacing:.3px}
+.btn-navy{background:linear-gradient(180deg,#1a3a5c,#143050);color:#fff;box-shadow:0 2px 8px rgba(13,43,69,.3)}
+.btn-navy:hover{background:linear-gradient(180deg,#1f4470,#1a3a5c);transform:translateY(-1px);box-shadow:0 4px 14px rgba(13,43,69,.4)}
+.btn-gold{background:linear-gradient(180deg,#c9a84c,#b8952e);color:#fff;box-shadow:0 2px 8px rgba(201,168,76,.35)}
+.btn-gold:hover{background:linear-gradient(180deg,#d4b45a,#c9a84c);transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,168,76,.45)}
+.btn-grn{background:linear-gradient(180deg,#27ae60,#219150);color:#fff;box-shadow:0 2px 8px rgba(39,174,96,.3)}
+.btn-grn:hover{transform:translateY(-1px)}
+.btn-org{background:linear-gradient(180deg,#e67e22,#d35400);color:#fff;box-shadow:0 2px 8px rgba(230,126,34,.3)}
+.btn-org:hover{transform:translateY(-1px)}
+.btn-red{background:linear-gradient(180deg,#e74c3c,#c0392b);color:#fff;box-shadow:0 2px 8px rgba(231,76,60,.3)}
+.btn-red:hover{transform:translateY(-1px)}
+.btn-sec{background:#f1f4f8;color:#555;border:1px solid #dde3ea}
+.btn-sec:hover{background:#e5eaf0}
+.btn-sm{height:32px;padding:0 12px;font-size:12px;border-radius:6px}
+.btn-xs{height:28px;padding:0 10px;font-size:11px;border-radius:6px}
+
+/* ===== ALERTS ===== */
+.al{padding:11px 15px;border-radius:10px;font-size:13px;margin-bottom:14px;font-weight:500}
+.al-ok{background:linear-gradient(135deg,#e8faf0,#d4f5e3);color:#1a6b3a;border:1px solid #8fdbaa}
+.al-er{background:linear-gradient(135deg,#fff0f0,#ffe5e5);color:#b5302f;border:1px solid #f5b8b8}
+.al-warn{background:linear-gradient(135deg,#fffbe8,#fff4d0);color:#7a5200;border:1px solid #f5d88e}
+
+/* ===== SEARCH ===== */
+.srch-row{display:flex;gap:10px}
+.srch-inp{flex:1;height:46px;padding:0 16px;font-size:15px;border:2px solid #1a3a5c;border-radius:10px;font-family:inherit;background:#fff;transition:all .2s}
+.srch-inp:focus{outline:none;box-shadow:0 0 0 4px rgba(26,58,92,.12);border-color:#1a3a5c}
+
+/* ===== PROFILE CARD ===== */
+.prof-card{display:none;background:linear-gradient(180deg,#fff 0%,#f9fafc 100%);border-radius:12px;box-shadow:0 4px 20px rgba(13,43,69,.12);overflow:hidden;margin-top:16px;border:1px solid rgba(13,43,69,.06);animation:fadeIn .35s ease}
+.prof-card.on{display:block}
+.phdr{background:linear-gradient(135deg,#1a3a5c 0%,#0d2b45 100%);color:#fff;padding:18px 22px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;position:relative;overflow:hidden}
+.phdr::before{content:'';position:absolute;top:-40px;right:-20px;width:120px;height:120px;border-radius:50%;background:radial-gradient(circle,rgba(201,168,76,.2) 0%,transparent 70%);pointer-events:none}
+.avi{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#c9a84c,#b8952e);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,.3);z-index:1}
+.pname{font-size:19px;font-weight:600;z-index:1}
+.psub{font-size:12px;opacity:.7;margin-top:4px;z-index:1}
+.ppills{display:flex;gap:7px;margin-top:8px;flex-wrap:wrap;z-index:1}
+.pill{font-size:11px;padding:4px 12px;border-radius:20px;font-weight:600;letter-spacing:.3px}
+.pw{background:rgba(255,255,255,.2);color:#fff}
+.pg{background:linear-gradient(135deg,#27ae60,#1e8449);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pa{background:linear-gradient(135deg,#c9a84c,#b8952e);color:#fff;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+.pbdy{padding:16px 22px}
+.igrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px}
+.ic{background:linear-gradient(135deg,#f7f9fc,#f0f4f8);border-radius:10px;padding:10px 13px;border-left:4px solid #1a3a5c;transition:all .2s}
+.ic:hover{transform:translateY(-2px);box-shadow:0 3px 10px rgba(0,0,0,.08)}
+.icl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;font-weight:600}
+.icv{font-size:14px;font-weight:600;word-break:break-all;color:#1a1a2e}
+
+/* ===== NOT FOUND ===== */
+.nf{display:none;text-align:center;padding:40px;background:linear-gradient(180deg,#fff,#f9fafc);border-radius:12px;margin-top:16px;box-shadow:0 3px 16px rgba(13,43,69,.1);border:1px solid rgba(13,43,69,.06);color:#888}
+
+/* ===== FORMS ===== */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.fg1{display:flex;flex-direction:column;gap:5px}
+.fg1.full{grid-column:1/-1}
+.fg1 label{font-size:12px;font-weight:700;color:#1a3a5c;text-transform:uppercase;letter-spacing:.4px}
+.fg1 input,.fg1 select,.fg1 textarea{height:38px;padding:0 12px;font-size:13px;border:2px solid #e0e6ed;border-radius:8px;font-family:inherit;background:#fff;color:#1a1a2e;transition:all .2s}
+.fg1 textarea{height:auto;padding:10px 12px;resize:none}
+.fg1 input:focus,.fg1 select:focus,.fg1 textarea:focus{outline:none;border-color:#1a3a5c;box-shadow:0 0 0 4px rgba(26,58,92,.08)}
+.fact{display:flex;gap:10px;margin-top:16px;justify-content:flex-end}
+
+/* ===== TABLE ===== */
+.toolbar{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+.toolbar input,.toolbar select{height:38px;padding:0 14px;font-size:13px;border:2px solid #e0e6ed;border-radius:8px;font-family:inherit;background:#fff;transition:all .2s}
+.toolbar input{flex:1;min-width:150px}
+.toolbar select:focus,.toolbar input:focus{outline:none;border-color:#1a3a5c}
+.twrap{overflow-x:auto;border-radius:10px;border:1px solid #e5eaf0;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:1000px}
+thead th{background:linear-gradient(180deg,#1a3a5c,#143050);color:#fff;padding:10px 9px;text-align:left;font-weight:600;font-size:11px;white-space:nowrap;letter-spacing:.3px;text-transform:uppercase}
+tbody td{padding:9px;border-bottom:1px solid #f0f3f7;vertical-align:middle;max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover td{background:linear-gradient(90deg,#f5f8fc,#f0f4f9)}
+.chk{width:16px;height:16px;cursor:pointer;accent-color:#1a3a5c}
+.pdf-tog{display:flex;align-items:center;gap:12px;padding:10px 14px;background:linear-gradient(135deg,#f5f8ff,#edf3fa);border-radius:10px;border:1px solid #d0e3fa;margin-bottom:12px;flex-wrap:wrap}
+.pdf-bar{display:none;align-items:center;flex-wrap:wrap;gap:10px;padding:10px 14px;background:linear-gradient(135deg,#eef4ff,#e0ecf8);border:2px solid #c5d8f5;border-radius:10px;margin-bottom:12px}
+.pdf-bar.on{display:flex}
+.selct{font-size:13px;font-weight:700;color:#1a3a5c;flex:1}
+
+/* ===== STATS ===== */
+.srow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.scard{background:linear-gradient(180deg,#fff 0%,#f9fafc 100%);border-radius:12px;padding:16px 18px;box-shadow:0 3px 16px rgba(13,43,69,.1);border-top:4px solid #c9a84c;transition:all .2s}
+.scard:hover{transform:translateY(-3px);box-shadow:0 6px 24px rgba(13,43,69,.14)}
+.slbl{font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.sval{font-size:28px;font-weight:800;color:#1a3a5c;margin-top:5px}
+.tcol{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.bitem{margin-bottom:10px}
+.brow{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:#555;font-weight:500}
+.btrk{height:6px;background:#e8f0f8;border-radius:4px}
+.bfil{height:6px;border-radius:4px;transition:width .4s ease}
+
+/* ===== MODAL ===== */
+.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(4px)}
+.ov.on{display:flex}
+.mdl{background:linear-gradient(180deg,#fff 0%,#f9fafc 100%);border-radius:14px;padding:24px;width:100%;max-width:680px;max-height:92vh;overflow-y:auto;box-shadow:0 12px 48px rgba(0,0,0,.35);border:1px solid rgba(201,168,76,.2);animation:slideIn .3s ease}
+@keyframes slideIn{from{opacity:0;transform:translateY(20px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;padding-bottom:13px;border-bottom:2px solid #e5eaf0}
+.mhdr h2{font-size:16px;font-weight:700;color:#1a3a5c}
+.mclose{background:none;border:none;font-size:26px;cursor:pointer;color:#888;line-height:1;padding:0 6px;transition:all .2s}
+.mclose:hover{color:#e74c3c;transform:rotate(90deg)}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:20px;right:20px;z-index:99999;animation:slideIn .3s ease;max-width:360px}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:640px){.fg{grid-template-columns:1fr}.fg1.full{grid-column:1}.srow{grid-template-columns:1fr 1fr}.tcol{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-left">
+    <div class="hdr-logo-area">AP</div>
+    <div>
+      <div class="hdr-name">Ajanta Precast Company</div>
+      <div class="hdr-sub">Labour Camp Management System</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="stxt"><span class="sdot" id="sdot"></span><span id="stxt">Loading...</span></div>
+    <span class="hdr-badge" id="badge">0 Workers</span>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <button class="nb on" data-tab="search">🔍 Search</button>
+  <button class="nb" data-tab="add">➕ Add Labour</button>
+  <button class="nb" data-tab="list">☰ All Records</button>
+  <button class="nb" data-tab="stats">📊 Summary</button>
+  <button class="nb" data-tab="data">💾 Data</button>
+</nav>
+
+<div class="wrap">
+
+<!-- SEARCH PANEL -->
+<div class="pnl on" id="pnl-search">
+  <div class="al al-warn" id="offwarn" style="display:none">⚠️ Offline mode — data saved locally. Connect to internet for cloud sync.</div>
+  <div class="card">
+    <div class="ctitle">🔍 Search by Personal Number</div>
+    <div class="srch-row">
+      <input class="srch-inp" id="sinp" type="text" placeholder="Enter Personal Number (e.g. P-001) and press Enter...">
+      <button class="btn btn-navy" id="btnSearch">🔍 Search</button>
+      <button class="btn btn-sec" id="btnClr">Clear</button>
+    </div>
+  </div>
+  <div class="nf" id="nf">
+    <div style="font-size:48px;margin-bottom:10px">👽</div>
+    <b style="font-size:15px;color:#1a3a5c">No Record Found</b>
+    <div style="font-size:13px;margin-top:6px;color:#aaa">Check number or add a new record</div>
+  </div>
+  <div class="prof-card" id="profCard">
+    <div class="phdr">
+      <div class="avi" id="pAvi"></div>
+      <div style="flex:1">
+        <div class="pname" id="pName"></div>
+        <div class="psub" id="pSub"></div>
+        <div class="ppills" id="pPills"></div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-navy" id="btnPEdit">✏️ Edit</button>
+        <button class="btn btn-sm btn-gold" id="btnPPDF">📄 PDF</button>
+      </div>
+    </div>
+    <div class="pbdy"><div class="igrid" id="pInfo"></div></div>
+  </div>
+</div>
+
+<!-- ADD PANEL -->
+<div class="pnl" id="pnl-add">
+  <div class="card">
+    <div class="ctitle">➕ Add New Labour Record</div>
+    <div class="al al-ok" id="aOk" style="display:none">✓ Record saved successfully!</div>
+    <div class="al al-er" id="aErr" style="display:none"></div>
+    <div class="fg" id="addForm"></div>
+    <div class="fact">
+      <button class="btn btn-sec" id="btnRst">🔄 Reset</button>
+      <button class="btn btn-navy" id="btnSave">💾 Save Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- LIST PANEL -->
+<div class="pnl" id="pnl-list">
+  <div class="card" style="padding-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:10px">
+      <div class="ctitle" style="margin-bottom:0">☰ All Labour Records</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn btn-sm btn-navy" id="btnRef">🔄 Refresh</button>
+        <span style="font-size:12px;color:#888;font-weight:600" id="listCt">0 records</span>
+      </div>
+    </div>
+    <div class="pdf-tog">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;font-weight:700;color:#1a3a5c">
+        <input type="checkbox" class="chk" id="pdfChk"> 📄 Enable PDF Selection Mode
+      </label>
+      <span style="font-size:12px;color:#777">— Tick workers then Export PDF</span>
+    </div>
+    <div class="pdf-bar" id="pdfBar">
+      <span class="selct" id="selCt">0 selected</span>
+      <button class="btn btn-sm btn-navy" id="btnSelAll">✓ Select All</button>
+      <button class="btn btn-sm btn-sec" id="btnSelClr">✗ Clear</button>
+      <button class="btn btn-sm btn-gold" id="btnExpSel">📄 Export Selected PDF</button>
+    </div>
+    <div class="toolbar">
+      <input id="fQ" placeholder="Filter by name or personal no...">
+      <select id="fJ2"><option value="">All Job Titles</option></select>
+      <select id="fS2"><option value="">All Sites</option></select>
+      <select id="fN2"><option value="">All Nationalities</option></select>
+    </div>
+    <div class="twrap">
+      <table>
+        <thead><tr id="thRow">
+          <th id="thChk" style="width:36px;text-align:center;display:none"><input type="checkbox" class="chk" id="chkAll"></th>
+          <th>P.No.</th><th>Name</th><th>Nationality</th><th>ID Type</th><th>ID No.</th>
+          <th>Job Title</th><th>Room</th><th>Zone</th><th>Site</th>
+          <th>Contact</th><th>Bus</th><th>Driver</th><th>Out Time</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="tBody"><tr><td colspan="15" style="text-align:center;color:#aaa;padding:30px">Loading...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- STATS PANEL -->
+<div class="pnl" id="pnl-stats">
+  <div class="srow">
+    <div class="scard"><div class="slbl">Total Labour</div><div class="sval" id="sT">0</div></div>
+    <div class="scard"><div class="slbl">Nationalities</div><div class="sval" id="sN">0</div></div>
+    <div class="scard"><div class="slbl">Active Sites</div><div class="sval" id="sS">0</div></div>
+    <div class="scard"><div class="slbl">Buses</div><div class="sval" id="sB">0</div></div>
+  </div>
+  <div class="tcol">
+    <div class="card"><div class="ctitle">💼 Job Title</div><div id="dJob"></div></div>
+    <div class="card"><div class="ctitle">🌍 Nationality</div><div id="dNat"></div></div>
+    <div class="card"><div class="ctitle">📍 Site-wise</div><div id="dSite"></div></div>
+    <div class="card"><div class="ctitle">🚌 Bus-wise</div><div id="dBus"></div></div>
+  </div>
+</div>
+
+<!-- DATA PANEL -->
+<div class="pnl" id="pnl-data">
+  <div class="card">
+    <div class="ctitle">💾 Export / Import Data</div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div style="padding:16px;background:linear-gradient(135deg,#f7f9fc,#eef2f7);border-radius:10px;border:1px solid #e5eaf0">
+        <div style="font-size:14px;font-weight:700;color:#1a3a5c;margin-bottom:10px">📄 Print PDF — Full Table (A4 Landscape)</div>
+        <button class="btn btn-gold" id="btnExpAll">📄 Export All as PDF</button>
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#f0faf4,#e6f5ed);border-radius:10px;border:1px solid #a3d9be">
+        <div style="font-size:14px;font-weight:700;color:#1a6b3a;margin-bottom:10px">📥 CSV — Opens in Excel</div>
+        <button class="btn btn-grn" id="btnCSV">📥 Download CSV</button>
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#f5f8ff,#eaf0fa);border-radius:10px;border:1px solid #c5d8f5">
+        <div style="font-size:14px;font-weight:700;color:#1a3a5c;margin-bottom:10px">💾 JSON Backup &amp; Restore</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-grn" id="btnExpJ">📥 Export Backup</button>
+          <label class="btn btn-org" style="cursor:pointer">📤 Import Backup<input type="file" id="impF" accept=".json" style="display:none"></label>
+        </div>
+      </div>
+      <div style="padding:16px;background:linear-gradient(135deg,#fffbf0,#fff5e0);border-radius:10px;border:1px solid #f5d88e">
+        <div style="font-size:14px;font-weight:700;color:#7a5200;margin-bottom:6px">☁️ Cloud Sync Status</div>
+        <div style="font-size:12px;color:#666;line-height:1.8" id="cloudInfo"></div>
+        <button class="btn btn-sm btn-navy" id="btnForceSync" style="margin-top:10px">🔄 Force Sync Now</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<!-- EDIT MODAL -->
+<div class="ov" id="editOv">
+  <div class="mdl">
+    <div class="mhdr">
+      <h2>✏️ Edit Labour Record</h2>
+      <button class="mclose" id="btnMX">×</button>
+    </div>
+    <div class="al al-ok" id="eOk" style="display:none">✓ Updated successfully!</div>
+    <div class="fg" id="editForm"></div>
+    <div class="fact">
+      <button class="btn btn-sec" id="btnMCncl">Cancel</button>
+      <button class="btn btn-navy" id="btnUpd">💾 Update Record</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id="toastContainer"></div>
+
+<!-- APP LOGIC -->
+<script>
+// ===================================================
+// LABOUR CAMP MANAGEMENT SYSTEM
+// JSONBin Cloud Sync — Sabhi devices automatically sync
+// ===================================================
+(function() {
+
+// ===== JSONBIN CONFIG =====
+var BIN_ID = "6a3299a6da38895dfed02f00";
+var READ_URL = "https://api.jsonbin.io/v3/b/" + BIN_ID + "/latest?meta=false";
+var WRITE_URL = "https://api.jsonbin.io/v3/b/" + BIN_ID;
+var MASTER_KEY = "$2a$10$r4PZt1EX8QEsLznJI4wUg.mGm9BoTmCDyPfR3vaFitrmvLJP1v10a";
+
+// ===== DATA =====
+var JOBS = ["Manager","Supervisor","Engineer","Foreman","Mason","Carpenter","Driver","Time Keeper","Store Keeper","Surveyor","Camp Boss","Cleaner","Retoucher","Erector"];
+var ID_TYPES = ["Iqama","Passport"];
+var NATS = [
+  "Afghan","Albanian","Algerian","American","Angolan","Argentine","Armenian","Australian","Austrian","Azerbaijani",
+  "Bahraini","Bangladeshi","Belarusian","Belgian","Bolivian","Bosnian","Brazilian","British","Bulgarian","Burmese",
+  "Cambodian","Cameroonian","Canadian","Chilean","Chinese","Colombian","Congolese","Croatian","Cuban","Czech",
+  "Danish","Dominican","Dutch","Egyptian","Emirati","Ethiopian","Filipino","Finnish","French","Georgian",
+  "German","Ghanaian","Greek","Guatemalan","Haitian","Honduran","Hungarian","Indian","Indonesian","Iranian",
+  "Iraqi","Irish","Italian","Ivorian","Jamaican","Japanese","Jordanian","Kazakhstani","Kenyan","Kuwaiti","Kyrgyz",
+  "Laotian","Lebanese","Libyan","Lithuanian","Malaysian","Malian","Mauritanian","Mexican","Moldovan","Mongolian",
+  "Moroccan","Mozambican","Namibian","Nepalese","New Zealander","Nicaraguan","Nigerian","Norwegian","Omani","Pakistani",
+  "Palestinian","Paraguayan","Peruvian","Polish","Portuguese","Qatari","Romanian","Russian","Rwandan","Saudi",
+  "Senegalese","Serbian","Singaporean","Somalian","South African","South Korean","Spanish","Sri Lankan","Sudanese",
+  "Swedish","Swiss","Syrian","Taiwanese","Tajik","Tanzanian","Thai","Togolese","Tunisian","Turkish",
+  "Turkmen","Ugandan","Ukrainian","Uruguayan","Uzbek","Venezuelan","Vietnamese","Yemeni","Zambian","Zimbabwean"
+];
+
+var EMPTY = { pno:'',name:'',idtype:'',idno:'',nat:'',job:'',room:'',zone:'',site:'',contact:'',bus:'',driver:'',dcontact:'',outtime:'',remarks:'' };
+var FIELDS = ["pno","name","idtype","idno","nat","job","room","zone","site","contact","bus","driver","dcontact","outtime","remarks"];
+var LABELS = { pno:"Personal No.", name:"Full Name", idtype:"ID Type", idno:"ID Number", nat:"Nationality", job:"Job Title", room:"Room No.", zone:"Zone No.", site:"Present Site", contact:"Contact No.", bus:"Bus No.", driver:"Driver Name", dcontact:"Driver Contact", outtime:"Out Time", remarks:"Remarks" };
+
+// ===== STATE =====
+var workers = [];
+var editPno = null;
+var pdfMode = false;
+var selSet = {};
+var cloudConnected = false;
+
+// ===== HELPERS =====
+function el(id) { return document.getElementById(id); }
+function show(id) { var e = el(id); if(e) e.style.display = 'block'; }
+function hide(id) { var e = el(id); if(e) e.style.display = 'none'; }
+function openOv(id) { var e = el(id); if(e) e.classList.add('on'); }
+function closeOv(id) { var e = el(id); if(e) e.classList.remove('on'); }
+function setVal(id, v) { var e = el(id); if(e) e.value = v || ''; }
+function getVal(id) { var e = el(id); return e ? e.value.trim() : ''; }
+function safe(v) { return String(v||'').trim(); }
+
+function toast(msg, type) {
+  type = type || 'ok';
+  var bg = type==='ok' ? 'linear-gradient(135deg,#e8faf0,#d4f5e3)' : 'linear-gradient(135deg,#fff0f0,#ffe5e5)';
+  var bd = type==='ok' ? '#8fdbaa' : '#f5b8b8';
+  var cl = type==='ok' ? '#1a6b3a' : '#b5302f';
+  var emoji = type==='ok' ? '&#10003;' : '&#10060;';
+  var div = document.createElement('div');
+  div.className = 'toast';
+  div.innerHTML = '<div style="padding:12px 18px;border-radius:10px;font-weight:600;font-size:13px;background:'+bg+';color:'+cl+';border:1px solid '+bd+';box-shadow:0 4px 16px rgba(0,0,0,.15)">'+emoji+' '+msg+'</div>';
+  document.getElementById('toastContainer').appendChild(div);
+  setTimeout(function(){ div.remove(); }, 3500);
+}
+
+function setSyncStatus(connected, msg) {
+  cloudConnected = connected;
+  var dot = el('sdot');
+  var txt = el('stxt');
+  if(dot) { dot.className = 'sdot' + (connected ? ' grn' : ''); }
+  if(txt) { txt.textContent = msg || (connected ? 'Cloud Synced' : 'Offline'); }
+  var warn = el('offwarn');
+  if(warn) warn.style.display = connected ? 'none' : 'block';
+}
+
+function updateBadge() {
+  var b = el('badge');
+  if(b) b.textContent = workers.length + ' Workers';
+}
+
+// ===== CLOUD SYNC =====
+function loadFromCloud() {
+  setSyncStatus(false, 'Fetching data...');
+  fetch(READ_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      workers = Array.isArray(data) ? data.filter(function(w) { return safe(w.pno) !== '_placeholder'; }) : [];
+      localStorage.setItem('ajanta_workers_cache', JSON.stringify(workers));
+      setSyncStatus(true, workers.length + ' workers synced');
+      updateBadge();
+      renderList();
+    })
+    .catch(function() {
+      var cached = localStorage.getItem('ajanta_workers_cache');
+      if (cached) {
+        try { workers = JSON.parse(cached); } catch(e) { workers = []; }
+        setSyncStatus(false, 'Offline — Cached data');
+      } else {
+        setSyncStatus(false, 'Offline — No data');
+        workers = [];
+      }
+      updateBadge();
+      renderList();
+    });
+}
+
+function saveToCloud(callback) {
+  localStorage.setItem('ajanta_workers_cache', JSON.stringify(workers));
+  updateBadge();
+  fetch(WRITE_URL, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', 'X-Master-Key': MASTER_KEY },
+    body: JSON.stringify(workers.length > 0 ? workers : [{pno:'_placeholder',name:'_placeholder',idtype:'',idno:'',nat:'',job:'',room:'',zone:'',site:'',contact:'',bus:'',driver:'',dcontact:'',outtime:'',remarks:''}])
+  })
+  .then(function(r) { return r.json(); })
+  .then(function() {
+    setSyncStatus(true, workers.length + ' workers synced');
+    if (callback) callback(true);
+  })
+  .catch(function() {
+    setSyncStatus(false, 'Offline — Saved locally');
+    if (callback) callback(false);
+  });
+}
+
+// ===== NAVIGATION =====
+function goTab(tab) {
+  document.querySelectorAll('.nb').forEach(function(b) { b.classList.remove('on'); });
+  document.querySelectorAll('.pnl').forEach(function(p) { p.classList.remove('on'); });
+  var btn = document.querySelector('.nb[data-tab="' + tab + '"]');
+  var pnl = el('pnl-' + tab);
+  if (btn) btn.classList.add('on');
+  if (pnl) pnl.classList.add('on');
+  if (tab === 'stats') renderStats();
+  if (tab === 'list') renderList();
+  if (tab === 'data') updateCloudInfo();
+}
+
+// ===== RENDER FORM =====
+function renderForm(containerId, data, onChange, pnoReadonly) {
+  var html = '';
+  FIELDS.forEach(function(f, i) {
+    if (f === 'remarks') {
+      html += '<div class="fg1 full"><label>'+LABELS[f]+'</label><textarea id="frm_'+f+'" rows="2" placeholder="Any notes...">'+safe(data[f])+'</textarea></div>';
+    } else if (f === 'idtype') {
+      html += '<div class="fg1"><label>'+LABELS[f]+'</label><select id="frm_'+f+'"><option value="">-- Select --</option>';
+      ID_TYPES.forEach(function(t) { html += '<option value="'+t+'"'+(data[f]===t?' selected':'')+'>'+t+'</option>'; });
+      html += '</select></div>';
+    } else if (f === 'job') {
+      html += '<div class="fg1"><label>'+LABELS[f]+' *</label><select id="frm_'+f+'"><option value="">-- Select Job Title --</option>';
+      JOBS.forEach(function(j) { html += '<option value="'+j+'"'+(data[f]===j?' selected':'')+'>'+j+'</option>'; });
+      html += '</select></div>';
+    } else if (f === 'nat') {
+      html += '<div class="fg1"><label>'+LABELS[f]+'</label><select id="frm_'+f+'"><option value="">-- Select Nationality --</option>';
+      NATS.forEach(function(n) { html += '<option value="'+n+'"'+(data[f]===n?' selected':'')+'>'+n+'</option>'; });
+      html += '</select></div>';
+    } else if (f === 'outtime') {
+      html += '<div class="fg1"><label>'+LABELS[f]+'</label><input type="time" id="frm_'+f+'" value="'+safe(data[f])+'"></div>';
+    } else {
+      var isReadonly = pnoReadonly && f === 'pno';
+      html += '<div class="fg1"><label>'+LABELS[f]+(f==='pno'||f==='name'||f==='job'?' *':'')+'</label><input id="frm_'+f+'" placeholder="'+(f==='pno'?'P-001':f==='name'?'Mohammad Ali':'')+'" value="'+safe(data[f])+'"'+(isReadonly?' readonly style="background:#f0f4f8;cursor:not-allowed"':'')+'></div>';
+    }
+  });
+  var container = document.getElementById(containerId);
+  if (container) container.innerHTML = html;
+}
+
+function readFormData() {
+  var d = {};
+  FIELDS.forEach(function(f) {
+    var inp = document.getElementById('frm_'+f);
+    d[f] = inp ? inp.value.trim() : '';
+  });
+  return d;
+}
+
+// ===== ADD WORKER =====
+function saveWorker() {
+  var d = readFormData();
+  if (!d.pno) { toast('Personal Number is required', 'err'); return; }
+  if (!d.name) { toast('Full Name is required', 'err'); return; }
+  if (!d.job) { toast('Job Title is required', 'err'); return; }
+  var exists = workers.some(function(w) { return safe(w.pno).toLowerCase() === d.pno.toLowerCase(); });
+  if (exists) { toast('Personal Number already exists', 'err'); return; }
+  workers.push(d);
+  saveToCloud(function(ok) {
+    toast('Record saved! ' + (ok ? 'Synced to cloud' : 'Saved locally'), 'ok');
+    renderForm('addForm', EMPTY, null, false);
+    updateBadge();
+  });
+}
+
+// ===== UPDATE WORKER =====
+function updateWorker() {
+  var d = readFormData();
+  var idx = -1;
+  for (var i = 0; i < workers.length; i++) {
+    if (safe(workers[i].pno) === safe(editPno)) { idx = i; break; }
+  }
+  if (idx === -1) { toast('Worker not found', 'err'); return; }
+  workers[idx] = d;
+  saveToCloud(function(ok) {
+    toast('Updated! ' + (ok ? 'Synced to cloud' : 'Saved locally'), 'ok');
+    closeOv('editOv');
+    editPno = null;
+    renderList();
+    if (lastPno === d.pno) showProfile(d);
+  });
+}
+
+// ===== DELETE WORKER =====
+function deleteWorker(pno) {
+  if (!confirm('Delete worker "' + pno + '"? This cannot be undone.')) return;
+  workers = workers.filter(function(w) { return safe(w.pno) !== safe(pno); });
+  saveToCloud(function(ok) {
+    toast('Deleted!', 'ok');
+    if (lastPno === pno) { hide('profCard'); hide('nf'); lastPno = null; }
+    renderList();
+  });
+}
+
+// ===== SEARCH =====
+function doSearch() {
+  var q = getVal('sinp').toLowerCase();
+  if (!q) return;
+  var found = workers.find(function(w) { return safe(w.pno).toLowerCase() === q; });
+  if (found) {
+    showProfile(found);
+    hide('nf');
+  } else {
+    hide('profCard');
+    show('nf');
+  }
+}
+
+function showProfile(w) {
+  lastPno = w.pno;
+  var names = safe(w.name).split(/\s+/);
+  el('pAvi').textContent = (names[0]&&names[0][0]||'') + (names[1]&&names[1][0]||'');
+  el('pName').textContent = safe(w.name);
+  el('pSub').innerHTML = '<span style="font-family:monospace;color:#f0d78c">'+safe(w.pno)+'</span>';
+  var pills = '';
+  if (w.job) pills += '<span class="pill pa">'+safe(w.job)+'</span>';
+  if (w.nat) pills += '<span class="pill pw">'+safe(w.nat)+'</span>';
+  if (w.site) pills += '<span class="pill pg">'+safe(w.site)+'</span>';
+  el('pPills').innerHTML = pills;
+
+  var infoHtml = '';
+  FIELDS.forEach(function(f) {
+    if (f === 'remarks') return;
+    infoHtml += '<div class="ic"><div class="icl">'+LABELS[f]+'</div><div class="icv">'+(safe(w[f])||'—')+'</div></div>';
+  });
+  if (w.remarks) infoHtml += '<div class="ic" style="grid-column:1/-1"><div class="icl">Remarks</div><div class="icv">'+safe(w.remarks)+'</div></div>';
+  el('pInfo').innerHTML = infoHtml;
+  show('profCard');
+}
+
+function openEdit(pno) {
+  editPno = pno;
+  var w = workers.find(function(x) { return safe(x.pno) === safe(pno); });
+  if (!w) return;
+  renderForm('editForm', w, null, true);
+  openOv('editOv');
+}
+
+// ===== LIST =====
+function renderList() {
+  var q = safe(getVal('fQ')).toLowerCase();
+  var jFilter = getVal('fJ2');
+  var sFilter = getVal('fS2');
+  var nFilter = getVal('fN2');
+
+  var filtered = workers.filter(function(w) {
+    if (q && safe(w.name).toLowerCase().indexOf(q) === -1 && safe(w.pno).toLowerCase().indexOf(q) === -1) return false;
+    if (jFilter && safe(w.job) !== jFilter) return false;
+    if (sFilter && safe(w.site) !== sFilter) return false;
+    if (nFilter && safe(w.nat) !== nFilter) return false;
+    return true;
+  });
+
+  el('listCt').textContent = filtered.length + ' records';
+  var pdfBar = el('pdfBar');
+  var thChk = el('thChk');
+
+  if (pdfMode) {
+    pdfBar.classList.add('on');
+    thChk.style.display = '';
+  } else {
+    pdfBar.classList.remove('on');
+    thChk.style.display = 'none';
+    selSet = {};
+  }
+  el('selCt').textContent = Object.keys(selSet).length + ' selected';
+
+  var rows = '';
+  filtered.forEach(function(w) {
+    var checked = selSet[safe(w.pno)] ? ' checked' : '';
+    rows += '<tr>';
+    if (pdfMode) rows += '<td style="text-align:center"><input type="checkbox" class="chk row-chk" data-pno="'+safe(w.pno)+'"'+checked+'></td>';
+    rows += '<td style="font-family:monospace;font-weight:700;color:#1a3a5c">'+safe(w.pno)+'</td>';
+    rows += '<td style="font-weight:600">'+safe(w.name)+'</td>';
+    rows += '<td>'+safe(w.nat||'—')+'</td>';
+    rows += '<td>'+safe(w.idtype||'—')+'</td>';
+    rows += '<td style="font-family:monospace;font-size:11px">'+safe(w.idno||'—')+'</td>';
+    rows += '<td><span style="background:#e8f8f0;color:#1a6b3a;padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600">'+safe(w.job||'—')+'</span></td>';
+    rows += '<td>'+safe(w.room||'—')+'</td>';
+    rows += '<td>'+safe(w.zone||'—')+'</td>';
+    rows += '<td>'+safe(w.site||'—')+'</td>';
+    rows += '<td style="font-family:monospace;font-size:11px">'+safe(w.contact||'—')+'</td>';
+    rows += '<td>'+safe(w.bus||'—')+'</td>';
+    rows += '<td>'+safe(w.driver||'—')+'</td>';
+    rows += '<td style="font-family:monospace;font-size:11px">'+safe(w.outtime||'—')+'</td>';
+    rows += '<td style="white-space:nowrap"><button class="btn btn-xs btn-navy edit-row" data-pno="'+safe(w.pno)+'">&#9998;</button> <button class="btn btn-xs btn-red del-row" data-pno="'+safe(w.pno)+'">&#10005;</button></td>';
+    rows += '</tr>';
+  });
+
+  if (filtered.length === 0) {
+    rows = '<tr><td colspan="'+(pdfMode ? 16 : 15)+'" style="text-align:center;color:#aaa;padding:40px"><div style="font-size:40px;margin-bottom:8px">&#128196;</div><b style="color:#1a3a5c">No records found</b></td></tr>';
+  }
+  el('tBody').innerHTML = rows;
+
+  // Wire row checkboxes
+  document.querySelectorAll('.row-chk').forEach(function(cb) {
+    cb.onchange = function() {
+      var p = this.getAttribute('data-pno');
+      if (this.checked) selSet[p] = true; else delete selSet[p];
+      el('selCt').textContent = Object.keys(selSet).length + ' selected';
+    };
+  });
+
+  // Wire action buttons
+  document.querySelectorAll('.edit-row').forEach(function(b) {
+    b.onclick = function() { openEdit(this.getAttribute('data-pno')); };
+  });
+  document.querySelectorAll('.del-row').forEach(function(b) {
+    b.onclick = function() { deleteWorker(this.getAttribute('data-pno')); };
+  });
+
+  // Update filter dropdowns
+  updateFilterDropdowns();
+}
+
+function updateFilterDropdowns() {
+  var sites = [], natList = [];
+  workers.forEach(function(w) { if (w.site) sites.push(safe(w.site)); if (w.nat) natList.push(safe(w.nat)); });
+  sites = [...new Set(sites)].sort();
+  natList = [...new Set(natList)].sort();
+
+  var jHtml = '<option value="">All Job Titles</option>';
+  JOBS.forEach(function(j) { jHtml += '<option>'+j+'</option>'; });
+  el('fJ2').innerHTML = jHtml;
+
+  var sHtml = '<option value="">All Sites</option>';
+  sites.forEach(function(s) { sHtml += '<option>'+s+'</option>'; });
+  el('fS2').innerHTML = sHtml;
+
+  var nHtml = '<option value="">All Nationalities</option>';
+  natList.forEach(function(n) { nHtml += '<option>'+n+'</option>'; });
+  el('fN2').innerHTML = nHtml;
+}
+
+function togglePdfMode() {
+  pdfMode = el('pdfChk').checked;
+  selSet = {};
+  renderList();
+}
+
+// ===== STATS =====
+function renderStats() {
+  var total = workers.length;
+  var natCount = new Set(workers.map(function(w) { return safe(w.nat); }).filter(Boolean)).size;
+  var siteCount = new Set(workers.map(function(w) { return safe(w.site); }).filter(Boolean)).size;
+  var busCount = new Set(workers.map(function(w) { return safe(w.bus); }).filter(Boolean)).size;
+
+  el('sT').textContent = total;
+  el('sN').textContent = natCount;
+  el('sS').textContent = siteCount;
+  el('sB').textContent = busCount;
+
+  function renderBreakdown(containerId, field) {
+    var m = {};
+    workers.forEach(function(w) {
+      var k = safe(w[field]) || '—';
+      m[k] = (m[k] || 0) + 1;
+    });
+    var entries = Object.entries(m).sort(function(a,b) { return b[1] - a[1]; });
+    var max = Math.max(1, entries.length > 0 ? entries[0][1] : 0);
+    var colors = ['#1a3a5c','#c9a84c','#27ae60','#e67e22','#2980b9','#8e44ad','#16a085','#d35400'];
+    var html = '';
+    if (entries.length === 0) {
+      html = '<p style="font-size:12px;color:#aaa;text-align:center;padding:20px">No data yet</p>';
+    } else {
+      entries.slice(0, 12).forEach(function(e, i) {
+        var pct = Math.round((e[1]/max)*100);
+        html += '<div class="bitem"><div class="brow"><span>'+e[0]+'</span><span style="font-weight:700">'+e[1]+'</span></div><div class="btrk"><div class="bfil" style="width:'+pct+'%;background:'+colors[i%colors.length]+'"></div></div></div>';
+      });
+      if (entries.length > 12) html += '<p style="font-size:11px;color:#888;text-align:center;margin-top:8px">+ '+(entries.length-12)+' more</p>';
+    }
+    el(containerId).innerHTML = html;
+  }
+
+  renderBreakdown('dJob', 'job');
+  renderBreakdown('dNat', 'nat');
+  renderBreakdown('dSite', 'site');
+  renderBreakdown('dBus', 'bus');
+}
+
+function updateCloudInfo() {
+  el('cloudInfo').innerHTML = 
+    '<b>Status:</b> ' + (cloudConnected ? '<span style="color:#27ae60">Connected &#10003;</span>' : '<span style="color:#e74c3c">Offline</span>') +
+    '<br><b>Bin ID:</b> <code>'+BIN_ID+'</code>' +
+    '<br><b>Total Records:</b> '+workers.length +
+    '<br><b>Data Location:</b> JSONBin.io cloud storage' +
+    '<br><b>Auto Sync:</b> Every save automatically syncs to cloud' +
+    '<br><b>Public Access:</b> Anyone with this page URL can view & edit data';
+}
+
+// ===== EXPORT =====
+function csvEscape(v) { var s = String(v||''); if (s.includes(',') || s.includes('"') || s.includes('\n')) return '"' + s.replace(/"/g,'""') + '"'; return s; }
+
+function downloadFile(name, content, mime) {
+  var blob = new Blob([content], { type: mime });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = name; a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
+
+function expCSV() {
+  var header = FIELDS.join(',');
+  var lines = workers.map(function(r) { return FIELDS.map(function(c) { return csvEscape(r[c]); }).join(','); });
+  downloadFile('labour_camp_' + new Date().toISOString().slice(0,10) + '.csv', [header].concat(lines).join('\n'), 'text/csv');
+  toast('CSV exported — ' + workers.length + ' records', 'ok');
+}
+
+function expJSON() {
+  downloadFile('labour_camp_backup_' + new Date().toISOString().slice(0,10) + '.json', JSON.stringify(workers, null, 2), 'application/json');
+  toast('JSON backup exported — ' + workers.length + ' records', 'ok');
+}
+
+function expPDF(rows) {
+  rows = rows || workers;
+  var cols = [
+    {k:'pno',l:'P.No.'},{k:'name',l:'Name'},{k:'nat',l:'Nationality'},{k:'job',l:'Job'},
+    {k:'room',l:'Room'},{k:'zone',l:'Zone'},{k:'site',l:'Site'},{k:'contact',l:'Contact'},
+    {k:'bus',l:'Bus'},{k:'driver',l:'Driver'},{k:'outtime',l:'Out Time'}
+  ];
+  var html = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>Ajanta Precast — Labour Records</title>'+
+  '<style>@page{size:A4 landscape;margin:12mm}body{font-family:Arial,sans-serif;color:#1a1a2e;margin:0;padding:20px}'+
+  'h1{font-size:18px;color:#0d2b45;margin:0 0 4px}.sub{font-size:11px;color:#888;margin-bottom:14px}'+
+  'table{width:100%;border-collapse:collapse;font-size:10px}th{background:#1a3a5c;color:#fff;padding:6px 5px;text-align:left;font-size:9px}'+
+  'td{padding:5px;border-bottom:1px solid #e5eaf0}tr:nth-child(even) td{background:#f7f9fc}'+
+  '.meta{font-size:10px;color:#666;margin-top:14px;text-align:right}</style></head><body>'+
+  '<h1>Ajanta Precast Company — Labour Camp Records</h1>'+
+  '<div class="sub">Generated: '+new Date().toLocaleString()+' · Total: '+rows.length+' records</div>'+
+  '<table><thead><tr>'+cols.map(function(c){return'<th>'+c.l+'</th>';}).join('')+'</tr></thead><tbody>'+
+  rows.map(function(r){return'<tr>'+cols.map(function(c){return'<td>'+safe(r[c.k]).replace(/</g,'&lt;')+'</td>';}).join('')+'</tr>';}).join('')+
+  '</tbody></table><div class="meta">Ajanta Precast Company · Labour Camp Management System</div>'+
+  '<script>window.onload=function(){setTimeout(function(){window.print();},300);}<\/script></body></html>';
+  var w = window.open('', '_blank');
+  if (!w) { toast('Popup blocked — please allow popups for printing', 'err'); return; }
+  w.document.write(html);
+  w.document.close();
+  toast('Opening print view for ' + rows.length + ' records', 'ok');
+}
+
+function importJSON(e) {
+  var file = e.target.files && e.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(ev) {
+    try {
+      var arr = JSON.parse(ev.target.result);
+      if (!Array.isArray(arr)) throw new Error('Invalid');
+      if (!confirm('Import ' + arr.length + ' records? Existing data will be REPLACED.')) return;
+      workers = arr;
+      saveToCloud(function(ok) {
+        toast('Imported ' + arr.length + ' records! ' + (ok ? 'Synced' : 'Saved locally'), 'ok');
+        renderList();
+      });
+    } catch(ex) {
+      toast('Invalid backup file!', 'err');
+    }
+    e.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ===== EVENT BINDING =====
+function on(id, ev, fn) {
+  var e = el(id);
+  if(e) e.addEventListener(ev, fn);
+}
+
+function init() {
+  // Nav tabs
+  document.querySelectorAll('.nb').forEach(function(b) {
+    b.addEventListener('click', function() {
+      goTab(this.getAttribute('data-tab'));
+    });
+  });
+
+  // Setup add form
+  renderForm('addForm', EMPTY, null, false);
+  on('btnSave', 'click', saveWorker);
+  on('btnRst', 'click', function() { renderForm('addForm', EMPTY, null, false); });
+
+  // Search
+  on('btnSearch', 'click', doSearch);
+  on('btnClr', 'click', function() { setVal('sinp',''); hide('profCard'); hide('nf'); lastPno=null; });
+  on('sinp', 'keydown', function(e) { if(e.key === 'Enter') doSearch(); });
+  on('btnPEdit', 'click', function() { if(lastPno) openEdit(lastPno); });
+  on('btnPPDF', 'click', function() {
+    if (lastPno) { var w = workers.find(function(x) { return safe(x.pno) === safe(lastPno); }); if (w) expPDF([w]); }
+  });
+
+  // Edit modal
+  on('btnMX', 'click', function() { closeOv('editOv'); });
+  on('btnMCncl', 'click', function() { closeOv('editOv'); });
+  on('btnUpd', 'click', updateWorker);
+  on('editOv', 'click', function(e) { if(e.target === el('editOv')) closeOv('editOv'); });
+
+  // List
+  on('btnRef', 'click', loadFromCloud);
+  on('fQ', 'input', renderList);
+  on('fJ2', 'change', renderList);
+  on('fS2', 'change', renderList);
+  on('fN2', 'change', renderList);
+  on('pdfChk', 'change', togglePdfMode);
+  on('btnSelAll', 'click', function() {
+    var q = safe(getVal('fQ')).toLowerCase();
+    workers.forEach(function(w) {
+      if (!q || safe(w.name).toLowerCase().indexOf(q) !== -1 || safe(w.pno).toLowerCase().indexOf(q) !== -1) selSet[safe(w.pno)] = true;
+    });
+    renderList();
+  });
+  on('btnSelClr', 'click', function() { selSet = {}; renderList(); });
+  on('btnExpSel', 'click', function() {
+    var selected = workers.filter(function(w) { return selSet[safe(w.pno)]; });
+    if (selected.length === 0) { toast('No workers selected', 'err'); return; }
+    expPDF(selected);
+  });
+  on('chkAll', 'change', function() {
+    var checked = this.checked;
+    document.querySelectorAll('.row-chk').forEach(function(cb) {
+      cb.checked = checked;
+      var p = cb.getAttribute('data-pno');
+      if (checked) selSet[p] = true; else delete selSet[p];
+    });
+    el('selCt').textContent = Object.keys(selSet).length + ' selected';
+  });
+
+  // Data tab
+  on('btnExpAll', 'click', function() { expPDF(); });
+  on('btnCSV', 'click', expCSV);
+  on('btnExpJ', 'click', expJSON);
+  on('impF', 'change', importJSON);
+  on('btnForceSync', 'click', loadFromCloud);
+
+  // Stats tab
+  on('nb-stats', 'click', renderStats);
+
+  // Initial load
+  loadFromCloud();
+}
+
+// ===== START =====
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+
+})();
+
+</script>
+
+<div style="text-align:center;padding:30px;font-size:11px;color:#aaa;letter-spacing:.5px">
+  ⚡ AJANTA PRECAST LABOUR CAMP · JSONBIN CLOUD SYNC · REAL-TIME · <span id="cloudFooter"></span>
+</div>
+
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v833ccba57c9e4d2798f2e76cebdd09a11778172276447" integrity="sha512-57MDmcccJXYtNnH+ZiBwzC4jb2rvgVCEokYN+L/nLlmO8rfYT/gIpW2A569iJ/3b+0UEasghjuZH/ma3wIs/EQ==" data-cf-beacon='{"version":"2024.11.0","token":"3279d41ec7804124a29acc6e692f9a2b","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>
